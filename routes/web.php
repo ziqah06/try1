@@ -11,7 +11,9 @@
 |
 */
 Route::get('/', 'PagesController@index');
-
+Route::get('/about', 'PagesController@about');
+Route::get('/service', 'PagesController@service');
+/*
 Route::get('/about', function () {
     return view('pages.about');
 });
@@ -20,12 +22,18 @@ Route::get('/tel', function () {
     return view('contact.tel');
 });
 
-//(call using URL: 127.0.0.1:8000/users/SAM)
+//(call using URL: 127.0.0.1:8000/users/SAM) *to get data
 Route::get('/users/{id}', function ($id){
     return 'This is user '.$id;
 });
 
-//(call using URL: 127.0.0.1:8000/users/lalaa/0123)
+//(call using URL: 127.0.0.1:8000/users/lalaa/0123) *to get data
 Route::get('/users/{id}/{name}', function ($id,$name){
     return 'This is user '.$name. ' with an id of '.$id;
 });
+
+//exercise2: Add another 1 static page called service.blade.php.
+Route::get('/service', function () {
+    return view('pages.service');
+});
+*/
