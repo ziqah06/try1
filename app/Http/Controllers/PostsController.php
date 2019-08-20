@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post; //use namaFolder\namaFile;
+use DB; // select posts by db
 
 class PostsController extends Controller
 {
@@ -14,12 +15,18 @@ class PostsController extends Controller
      */
     public function index()
     {
+        return DB::select('SELECT title FROM posts');
         //return view('namaFolder.namaFile');
         //return view('posts.index');
-        //$posts = Post::all(); //tuk extract smua record dri db & kena letak import model //utk display smua view
-        //return view('posts.index')->with('posts', $posts);
-        $posts = Post::orderBy('title','desc')->paginate(1); //utk pagination view
+        //return Post::all(); tuk json file, display data without design
+        /*$posts = Post::all(); //tuk extract smua record dri db & kena letak import model //utk display smua view
+        return view('posts.index')->with('posts', $posts);*/
+        //$posts = Post::orderBy('title','desc')->paginate(1); //utk pagination view
+        //$posts = Post::orderBy('title','asc')->paginate(2);
+        //Post::orderBy('table apa yg nak','asc @desc')->paginate(display berapa byak);
+        //return Post::where('title','testing')->get();
         return view('posts.index')->with('posts', $posts);
+        
     }
 
     /**
@@ -52,7 +59,7 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        //
+        //find(utk cri id), id adalah parameter atas
         $post = Post::find($id);
         return view('posts.show')->with('post',$post);
     }
