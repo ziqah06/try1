@@ -13,6 +13,8 @@
 Route::get('/', 'PagesController@index');
 Route::get('/about', 'PagesController@about');
 Route::get('/service', 'PagesController@service');
+
+Route::resource('posts','PostsController'); //*using resouce utk generat CRUD operation
 /*
 Route::get('/about', function () {
     return view('pages.about');
