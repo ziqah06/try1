@@ -9,7 +9,9 @@
         
     </head>
     <body>
-        @yield('content')
-        
+        @include('include.navbar') <!--('nama folder.nama file)-->
+        <div class="container"> <!--class container mmg dah ada dri bootstrap-->
+            @yield('content')
+        </div>
     </body>
 </html>
