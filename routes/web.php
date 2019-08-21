@@ -39,3 +39,6 @@ Route::get('/service', function () {
     return view('pages.service');
 });
 */
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
