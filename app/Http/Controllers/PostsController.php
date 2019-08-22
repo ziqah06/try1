@@ -5,6 +5,7 @@ namespace App\Http\Controllers; //tuk bezakan nama file yg sama, kalau ada folde
 use Illuminate\Http\Request;
 use App\Post; //use namaFolder\namaFile;
 use DB; // select posts by db
+use Illuminate\Support\Facades\Storage;  //import gmbar dri public storage
 
 class PostsController extends Controller
 {
@@ -55,13 +56,25 @@ class PostsController extends Controller
         //Validate error message if textbox null
         $this->validate($request, [
             'title'=>'required',
-            'body'=>'required'
+            'body'=>'required',
+            'cover_image'=>'image|nullable|max:1999'
             ]);
+
+            if($request->hasFile('cover_image')){ //*utk tgok ada file ke x
+                $filenameWithExt = $request->file('cover_image')->getClientOriginalName();  //amek smua nama eg: my_pic.jpg
+                $filename = pathinfo($filenameWithExt,PATHINFO_FILENAME);                   //amek smua nama eg: my_pic.jpg
+                $extension = $request->file('cover_image')->getClientOriginalExtension();   //amek extension je eg:jpg
+                $filenameToStore = $filename.'_'.time().'.'.$extension;                     //amek nama filename_time.extens eg:my_pic_114140.jpg
+                $path = $request->file('cover_image')->storeAs('public/cover_images', $filenameToStore);
+            } else{
+                $filenameToStore = 'no_image.jpg';
+            }
            
             $post = new Post();
             $post->title = $request->input('title');
             $post->body = $request->input('body');
             $post->user_id = auth()->user()->id;
+            $post->cover_image = $filenameToStore;
             $post->save();
            
             return redirect('/posts')->with('success', 'Post Successfully Created!!!'); 
@@ -90,6 +103,10 @@ class PostsController extends Controller
     {
         //to post edit data
         $post = Post::find($id);
+        if(auth()->user()->id !== $post->user_id)
+        {
+            return redirect('/posts')->with('error','Unauthorized Page!!!');
+        }
         return view('posts.edit')->with('post',$post);
     }
 
@@ -108,9 +125,21 @@ class PostsController extends Controller
             'body'=>'required'
             ]);
            
+            if($request->hasFile('cover_image')){
+                $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
+                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('cover_image')->getClientOriginalExtension();
+                $filenameToStore =$filename.'_'.time().'.'.$extension;
+                $path = $request->file('cover_image')->storeAs('public/cover_images', $filenameToStore);
+            }
+
             $post = Post::find($id);
             $post->title = $request->input('title');
             $post->body = $request->input('body');
+            if($request->hasFile('cover_image'))
+            {
+                $post->cover_image = $filenameToStore;
+            }
             $post->save();
            
             return redirect('/posts')->with('success', 'Post Successfully Updated!!!'); 
@@ -126,7 +155,21 @@ class PostsController extends Controller
     {
         //utk delete row, select by id
         $post = Post::find($id);
+        if(auth()->user()->id !== $post->user_id)
+        {
+            return redirect('/posts')->with('error','Unauthorized Page!!!');
+        }
+
+        if($post->cover_image != 'no_image.jpg'){
+            Storage::delete('public/cover_images/'.$post->cover_image);
+        }
+
         $post->delete();
         return redirect('/posts')->with('success', 'Post Successfully Deleted!!!');
+    }
+
+    public function __construct() /*tuk allow guest access index n show page*/
+    {
+        $this->middleware('auth',['except' => ['index','show']]);
     }
 }

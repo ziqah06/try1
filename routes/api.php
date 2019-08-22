@@ -16,3 +16,9 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('posts', 'APIPostsController@index'); //method get *tuk dpatkan list obj
+Route::get('post/{id}', 'APIPostsController@show'); //post/{id} tuk tunjuk id yg select
+Route::post('post', 'APIPostsController@store'); //
+Route::put('post', 'APIPostsController@store'); //put *tuk update
+Route::delete('post/{id}', 'APIPostsController@destroy');
