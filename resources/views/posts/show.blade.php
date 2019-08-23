@@ -18,19 +18,9 @@
 
             {!!Form::open(['action' => ['PostsController@destroy',$post->id ], 'method' => 'POST', 'class'=> 'float-right'])!!}
             {{Form::hidden('_method', 'DELETE')}}
-            {{Form::submit('Delete', ['class'=>'btn btn-danger', 'onclick'=>'confirmDelete'])}}
+            {{Form::submit('Delete', ['class'=>'btn btn-danger', 'onclick'=>'return confirm("Are you sure to delete this?")'])}}
             {!! Form::close() !!}
         @endif
     @endif
 
-    <script>
-        function confirmDelete(){
-            var x = confirm('Are you sure want to delete??');
-            if(x){
-                return true;
-            } else{
-                return false;
-            }
-        }
-    </script>
 @endsection
