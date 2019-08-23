@@ -42,3 +42,5 @@ Route::get('/service', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/formEmail', 'ContactController@formEmail'); //ContactController *url x bole duplicate *to show form
+Route::post('/test', 'ContactController@test'); //ContactController *url x bole duplicate *to send email
